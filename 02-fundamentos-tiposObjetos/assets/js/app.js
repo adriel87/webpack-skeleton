@@ -56,7 +56,38 @@ console.log(symbol===symbol2);
 
 //array
 
+
+let videojuegos =['mario', 'megaman', 'zelda'];
+
+console.log({videojuegos})
+
+console.log(videojuegos[0])
+
+for (let i = 0; i < videojuegos.length; i++) {
+    const element = videojuegos[i];
+    console.log({element});
+}
+
+//? en JS podemos llenar el array con difrenretes tipos de datos
+
+let cosas = [
+    true,   //boolean
+    false,  //boolean
+    3,      //number
+    4+3,    //number
+    function(){}, //funcion
+    ()=>{}, //funcion
+    {a:'hola'}, //objeto literal
+    ['x','megaman','zero','doctor liht'], //array
+]
+
+console.log(cosas[cosas.length-1][3]);
+
+
 //mas sobre array
+
+
+
 
 //objetos
 
