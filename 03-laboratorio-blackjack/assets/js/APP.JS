@@ -175,13 +175,13 @@ newGame.addEventListener('click', ()=>{
     stopGame.disabled=false;
     playerScore.innerHTML = 0;
     computerScore.innerHTML = 0;
-    console.log('click en nuevo juego')
+    
 })
 
 stopGame.addEventListener('click', ()=>{
     computerGame(playerPoints)
     stopGame.disabled =true;
     giveCard.disabled =true;
-    console.log('clikc en stop');
+   
 })
 
