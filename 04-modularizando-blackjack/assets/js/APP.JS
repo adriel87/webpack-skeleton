@@ -1,187 +1,174 @@
 //funcion autoinvocada
 
-(() =>{
-    'use strict';
-    const palos     = ['C','D','H','S']
+const myModule=(() => {
+  "use strict";
 
-    const especiales  = ['A','J','Q','K']
+  let deck = [];
+
+  const palos = ["C", "D", "H", "S"],
+    especiales = ["A", "J", "Q", "K"];
+
+
+    let playersPoints = [];
+
+
+
+  //botones
+  const newGame     = document.querySelector("#newGame"),
+        giveCard    = document.querySelector("#giveCard"),
+        stopGame    = document.querySelector("#stopGame");
+
+  //area de juego
+
+  //jugador //computadora
+
+  const score                   = document.querySelectorAll("small"),
+        divCartas               = document.querySelectorAll('.div-cartas');
+
+  //computadora
+
+  const computerScore = document.querySelectorAll("small")[1];
+
+  //este metodo crea una nueva baraja y esta esta barajada
+
+  //esta funcion inicia el juego
+  const gameInit = (numJugadores = 2) => {
+    deck=crearDeck();
+    playersPoints =[];
+
+    for(let i =0 ; i< numJugadores;i++){
+        playersPoints.push(0)
+    }
+    for (const divCarta of divCartas) {
+      divCarta.innerHTML = '';
+    }
+  
+    giveCard.disabled = false;
+    stopGame.disabled = false;
+    score.forEach(s => s.innerHTML=0)
+  
     
-    let deck        =[];
-    
-    let playerPoints =0,
-    
-        computerPoints = 0;
-    
-    
-    // referencias html
-    
-    //botones
-    const newGame = document.querySelector('#newGame');
-    const giveCard = document.querySelector('#giveCard');
-    const stopGame = document.querySelector('#stopGame');
-    
-    //area de juego
-    
-    //jugador
-    
-    const divCartas = document.querySelector('#jugador-cartas');
-    
-    const playerScore = document.querySelectorAll('small')[0];
-    
-    
-    //computadora
-    
-    const divCartasComputadora = document.querySelector('#computadora-cartas')
-    
-    const computerScore = document.querySelectorAll('small')[1];
-    
-    
-    //este metodo crea una nueva baraja y esta esta barajada
-    const crearDeck = ()=>{
-        for (const palo of palos) {
-            for (let i = 2; i <=10; i++) {
-                deck.push(i+palo)            
-            }
-            for (const especial of especiales) {
-                deck.push(especial+palo)
-            }
-        }
-       
-        deck = _.shuffle(deck)
-        
-        return deck;
+  };
+
+  const crearDeck = () => {
+    deck = [];
+    for (const palo of palos) {
+      for (let i = 2; i <= 10; i++) {
+        deck.push(i + palo);
+      }
+      for (const especial of especiales) {
+        deck.push(especial + palo);
+      }
     }
     
+    return _.shuffle(deck);
     
-    crearDeck();
-    
-    
-    // pedir carta
-    const pedirCarta = ()=>{
-    
-        if( deck.length!==0 ){
-            
-            const cartaCogida = deck.pop();
-        
-            return cartaCogida;
-    
-        }
-    
-        throw 'no hay cartas en la baraja'
+  };
+
+  // pedir carta
+  const pedirCarta = () => {
+    if (deck.length !== 0) {
+      return deck.pop();
     }
-    
-    
-    //obtener el valor de la carta
-    
-    const valorCarta = ( carta='' ) =>{
-        
-        let valor = carta.slice( 0 , carta.length-1)
-        
-        if(isNaN(valor)){
-            
-           valor = (valor === 'A')  ?11
-                                    :10 
-          
-        }else{
-            valor = Number.parseInt(valor)
-        }
-        
-        return valor;
+    throw "no hay cartas en la baraja";
+  };
+
+  //obtener el valor de la carta
+
+  const valorCarta = (carta = "") => {
+    let valor = carta.slice(0, carta.length - 1);
+
+    if (isNaN(valor)) {
+      valor = valor === "A" ? 11 : 10;
+    } else {
+      valor = Number.parseInt(valor);
     }
-    
-    valorCarta(pedirCarta())
-    
-    
-    //turno de la computer
-    
-    const computerGame =( minPoints ) =>{
-    
-        minPoints = (minPoints>21) ?0 : minPoints 
-    
+
+    return valor;
+  };
+
+  //acumularpuntos
+
+  const points = (carta ,turno)=>{
+
+    playersPoints[turno] += valorCarta( carta );
+    score[turno].innerHTML = playersPoints[turno];
+
+  }
+
+  //crear nueva carta en tablero
+
+  const drawCard = (carta, htmlNode) =>{
+    const nuevaCarta =document.createElement('img');
+    nuevaCarta.src = `assets/cartas/${carta}.png`;
+    nuevaCarta.className = 'carta';
+    nuevaCarta.alt = `la carta es ${carta}`
+
+    htmlNode.append(nuevaCarta);
+  }
+
+  //turno de la computer
+
+  const computerGame = (minPoints) => {
+    minPoints = minPoints > 21 ? 0 : minPoints;
+
     do {
-        
-        const carta = pedirCarta();
-    
-        computerPoints += valorCarta(carta);
-    
-        computerScore.innerHTML = computerPoints;
-    
-        const nuevaCarta = document.createElement('img')
-        nuevaCarta.src=`assets/cartas/${carta}.png`;
-        nuevaCarta.className='carta';
-    
-        divCartasComputadora.append(nuevaCarta);
-        
-    
-    } while (computerPoints <= minPoints);
-    
-    
-    const msg = (playerPoints==computerPoints)  ? 'gua es un empate'
-                :(computerPoints>21)            ? 'jugador gana'
-                :'computadora gana'                                   
-    
-    console.warn(msg);
-        
-    }
-    
-    
-    
-    // EVENTOS
-    
-    giveCard.addEventListener('click', ()=>{
-    
-        
-    
-        if(playerPoints<=21){
-    
-            const carta = pedirCarta();
-        
-            playerPoints += valorCarta(carta);
-        
-            
-        
-            playerScore.innerHTML = playerPoints;
-        
-            const nuevaCarta = document.createElement('img')
-            nuevaCarta.src=`assets/cartas/${carta}.png`;
-            nuevaCarta.className='carta';
-        
-            divCartas.append(nuevaCarta)
-    
-            if (playerPoints>21) {
-                giveCard.disabled = true
-            }else if( playerPoints == 21){
-                console.warn('21 , estas apunto');
-            }
-        }
-    
-      
-    
-    })
-    
-    newGame.addEventListener('click', ()=>{
-    
-        divCartas.innerHTML='';
-        divCartasComputadora.innerHTML='';
-    
-        crearDeck();
-        playerPoints = 0;
-        computerPoints = 0;
-        giveCard.disabled=false;
-        stopGame.disabled=false;
-        playerScore.innerHTML = 0;
-        computerScore.innerHTML = 0;
-        
-    })
-    
-    stopGame.addEventListener('click', ()=>{
-        computerGame(playerPoints)
-        stopGame.disabled =true;
-        giveCard.disabled =true;
-       
-    })
-    
-    
-    
+      const carta = pedirCarta();
 
+      points(carta, playersPoints.length-1);
+    
+      drawCard(carta,divCartas[divCartas.length-1]);
+
+    } while (playersPoints[playersPoints.length-1] <= minPoints);
+
+    winner();
+  };
+
+  const winner = ()=>{
+
+    let winner = '',
+        puntuation = 0;
+
+    playersPoints.forEach((points, i) => {
+      
+      if(points > puntuation){
+        if (points>21) { 
+          console.warn(`el jugador ${ i + 1 } pierde`);
+        }else{
+          puntuation = points;
+          winner = `el jugador ${ i + 1 } gana`
+        }
+      }
+    });
+    console.warn(winner);
+  }
+      
+
+  // EVENTOS
+
+  giveCard.addEventListener("click", () => {
+    if (playersPoints[0] <= 21) {
+      const carta = pedirCarta();
+
+        points(carta,0);
+        drawCard(carta,divCartas[0])
+    
+      if (playersPoints[0] > 21) {
+        giveCard.disabled = true;
+      } else if (playersPoints[0] == 21) {
+        console.warn("21 , estas apunto");
+      }
+    }
+  });
+
+
+  stopGame.addEventListener("click", () => {
+    computerGame(playersPoints[0]);
+    stopGame.disabled = true;
+    giveCard.disabled = true;
+  });
+
+  return {
+    newGame: gameInit,
+  };
 })();

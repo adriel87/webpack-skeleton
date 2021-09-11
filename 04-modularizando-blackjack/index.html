@@ -18,10 +18,10 @@
             <button id="newGame" class="btn btn-danger">
                 nuevo juego
             </button>
-            <button id="giveCard" class="btn btn-primary">
+            <button id="giveCard" class="btn btn-primary" disabled=true>
                 pedir carta
             </button>
-            <button id="stopGame" class="btn btn-primary">
+            <button id="stopGame" class="btn btn-primary" disabled=true>
                 detener
             </button>
 
@@ -31,13 +31,7 @@
     <div class="row container mt-4">
         <div class="col">
             <h1>jugador 1 - <small>0</small></h1>
-            <div id="jugador-cartas">
-                <!-- <img class="carta" src="assets/cartas/10S.png" alt="">
-                <img class="carta" src="assets/cartas/10S.png" alt="">
-                <img class="carta" src="assets/cartas/10S.png" alt="">-->
-               
-
-            </div>
+            <div id="jugador-cartas" class="div-cartas">
         </div>
     </div>
 
@@ -45,17 +39,22 @@
     <div class="row container mt-2">
         <div class="col">
             <h1>computadora 1 - <small>0</small></h1>
-            <div id="computadora-cartas">
-                <!-- <img class="carta" src="assets/cartas/10S.png" alt="">
-                <img class="carta" src="assets/cartas/10S.png" alt="">
-                <img class="carta" src="assets/cartas/10S.png" alt="">-->
-                <!-- <img class="carta" src="assets/cartas/10S.png" alt="">  -->
-
+            <div id="computadora-cartas" class="div-cartas">
             </div>
         </div>
     </div>
 
     <script src="assets/js/underscore.min.js"></script>
     <script src="assets/js/APP.JS"></script>
+
+    <script>
+
+        document.querySelector('#newGame').addEventListener('click',()=>{
+
+            myModule.newGame()
+
+        })
+
+    </script>
 </body>
 </html>
