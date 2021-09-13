@@ -1,17 +1,32 @@
 const htmlWebPackPlugin = require ('html-webpack-plugin');
 const MiniCssExtract    = require('mini-css-extract-plugin');
 const copyPlugin        = require('copy-webpack-plugin');
+const cssMini           = require('css-minimizer-webpack-plugin');
+const terser            = require('terser-webpack-plugin');
 
 module.exports={
 
-    mode: 'development',
+    mode: 'production',
 
     output: {
         clean: true,
+        filename:'main.[contenthash].js',
         assetModuleFilename: 'images/holi[ext][query]'
     },
     module:{
         rules:[
+            {
+                
+                test: /\.m?js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader",
+                    options: {
+                    presets: ['@babel/preset-env']
+                    }
+                }
+                  
+            },
             {
                 test: /\.html$/,
                 loader: 'html-loader',
@@ -39,20 +54,29 @@ module.exports={
             
         ]
     },
+    optimization:{
+        minimize:true,
+        minimizer:[
+            new cssMini(),
+            new terser(),
+        ]
+    },
+
     plugins:[
         new htmlWebPackPlugin({
             template: './src/index.html',
             filename: 'index.html'
         }),
         new MiniCssExtract({
-            filename:"[name].css",
+            filename:"[name][fullhash].css",
             ignoreOrder:false,
+            
         }),
         new copyPlugin({
             patterns:[
                 { from: './src/assets/', to: 'assets/' }
             ]
-        })
+        }),
     ],
     
 
